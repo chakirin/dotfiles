@@ -1,0 +1,9 @@
+ctrlp.vim
+neobundle.vim
+neocomplete
+neosnippet
+neosnippet-snippets
+vim-coffee-script
+vim-fugitive
+vim-rails
+vim-surround
