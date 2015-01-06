@@ -11,14 +11,50 @@ call neobundle#begin(expand('~/.vim/Bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " Plugins
 " -------------------------------------------------------------
-NeoBundle 'tpope/vim-rails/'
+" see neobundle-options-autoload
+NeoBundle 'tpope/vim-rails'
+NeoBundleLazy 'vim-scripts/syntaxhaskell.vim', {
+      \ 'autoload' : {
+      \   'filetypes' : ['haskell']
+      \ }
+      \ }
+NeoBundleLazy 'slimv.vim', {
+      \ 'autoload' : {
+      \   'filetypes' : ['lisp']
+      \ }
+      \ }
+NeoBundleLazy 'aharisu/vim_goshrepl', {
+      \ 'autoload' : {
+      \   'commands' : ['GoshREPL', 'GoshREPLWithBuf'],
+      \   'filetypes' : ['scheme']
+      \ },
+      \ 'depends' : 'Shougo/vimproc.vim'
+      \ }
+NeoBundleLazy 'aharisu/vim-gdev', {
+      \ 'autoload' : {
+      \   'commands' : ['GoshREPL', 'GoshREPLWithBuf'],
+      \   'filetypes' : ['scheme']
+      \ },
+      \ 'depends' : 'Shougo/vimproc.vim'
+      \ }
+NeoBundle 'thinca/vim-quickrun' 
 NeoBundle 'https://github.com/kien/ctrlp.vim.git'
 NeoBundle 'https://github.com/kchmck/vim-coffee-script.git'
 NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neosnippet-snippets.git'
 NeoBundle 'https://github.com/Shougo/neosnippet.git'
+NeoBundle 'Shougo/vimproc.vim', {
+      \   'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'linux' : 'make',
+      \     'unix' : 'gmake',
+      \   }
+      \ }
 NeoBundle 'https://github.com/tpope/vim-fugitive.git'
 NeoBundle 'https://github.com/tpope/vim-surround'
+NeoBundle 'thinca/vim-ref'
 " General
 " -------------------------------------------------------------
 call neobundle#end()
@@ -51,6 +87,10 @@ set vb t_vb=
 set hlsearch
 set number
 set cursorline
+set textwidth=0
+hi Pmenu ctermbg=8
+hi PmenuSel ctermbg=1
+hi PmenuSbar ctermbg=0
 " Spell check
 set spell spelllang=en_us
 setlocal spell spelllang=en_us
@@ -68,15 +108,24 @@ set backspace=indent,eol,start
 set foldmethod=syntax
 "let perl_fold=1
 set foldlevel=100
+
 " File
 " -------------------------------------------------------------
-set wildmode=list:longest
+set wildmode=longest,full
 if has('persistent_undo')
   set undodir=./.vimundo,~/.vimundo
   set undofile
 endif
 noremap <Space>. :<C-u>edit $MYVIMRC<Enter>
 noremap <Space>s. :<C-u>source $MYVIMRC<Enter>
+
+" Show AllMaps
+" -------------------------------------------------------------
+command!
+      \   -nargs=* -complete=mapping
+      \   AllMaps
+      \   map <args> | map! <args> | lmap <args>
+
 " Fugitive
 " -------------------------------------------------------------
 com! Gb Gblame
@@ -121,18 +170,16 @@ endif
 set history=700
 set wildmenu
 
-" NeoSnippet
 if neobundle#is_installed('neocomplete')
   let g:neocomplete#enable_at_startup = 1
   let g:neocomplete#enable_ignore_case = 1
   let g:neocomplete#enable_smart_case = 1
-  let g:neocomplete_min_syntax_length = 4
+  let g:neocomplete_min_syntax_length = 3
   if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
   endif
   let g:neocomplete#keyword_patterns._ = '\h\w*'
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  let g:neocomplete#keyword_patterns['gosh-repl'] = "[[:alpha:]+*/@$_=.!?-][[:alnum:]+*/@$_:=.!?-]*"
 elseif neobundle#is_installed('neocomplcache')
   let g:neocomplcache_enable_at_startup = 1
   let g:neocomplcache_enable_ignore_case = 1
@@ -143,12 +190,71 @@ elseif neobundle#is_installed('neocomplcache')
   let g:neocomplcache_keyword_patterns._ = '\h\w*'
   let g:neocomplcache_enable_camel_case_completion = 1
   let g:neocomplcache_enable_underbar_completion = 1
+  let g:neocomplcache_min_syntax_length = 3
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+  " Enable heavy omni completion.
+  if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+  endif
+  let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 endif
 inoremap <expr><TAB> pumvisible()? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
+" NeoSnippet
+" -------------------------------------------------------------
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+
 let s:my_snippet = '~/.vim/mysnippet/'
 let g:neosnippet#snippets_directory = s:my_snippet
+
+" NeoSnippet
+" -------------------------------------------------------------
+let g:quickrun_config = {}
+
+let g:quickrun_config = {
+      \   "_" : {
+      \       "runner" : "vimproc",
+      \       "runner/vimproc/updatetime" : 60
+      \   },
+      \}
+let g:quickrun_config['tex'] = {
+            \   'command' : 'latexmk',
+            \   'outputter' : 'error',
+            \   'outputter/error/error' : 'quickfix',
+            \   'cmdopt': '-pdfdvi',
+            \   'exec': ['%c %o %s']
+            \ }
+
+"" Gosh
+" -------------------------------------------------------------
+vmap <CR> <Plug>(gosh_repl_send_block)
+let s:hooks = neobundle#get_hooks('vim_goshrepl')
+function! s:hooks.on_source(bundle)
+  let g:gosh_buffer_direction = 'v'
+  let g:gosh_buffer_width = 50
+endfunction
+
+"" Slimv for common lisp
+" -------------------------------------------------------------
+let g:paredit_mode = 1
+let g:paredit_electric_return = 0
+let g:slimv_disable_scheme = 1
+let g:slimv_repl_split = 4
+let g:slimv_repl_name = 'REPL'
+let g:slimv_repl_simple_eval = 0
+let g:slimv_lisp = '/usr/local/bin/clisp'
+let g:slimv_impl = 'clisp'
+let g:slimv_preferred = 'clisp'
+let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"clisp $HOME/.vim/Bundle/slimv.vim/slime/start-swank.lisp\""'
+let g:lisp_rainbow = 1
+autocmd BufNewFile, BufRead *.asd set filetype=lisp
 
 "" Scouter
 " -------------------------------------------------------------
@@ -164,3 +270,5 @@ command! -bar -bang -nargs=? -complete=file Scouter
       \        echo Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
 command! -bar -bang -nargs=? -complete=file GScouter
       \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
+
+
