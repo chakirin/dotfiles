@@ -3,7 +3,23 @@ export LANG="en_JP.UTF-8"
 
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+#unix settings
+stty icrnl
+
+#by os settings
+case ${OSTYPE} in
+  darwin*)
+   fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+   trash(){
+    mv $1 $HOME/.Trash/;
+   }
+      ;;
+  linux*)
+    trash(){
+      mv $1 $HOME/.local/share/Trash/files/;
+    }
+      ;;
+esac
 
 sumContribution(){
   author=$2
@@ -12,22 +28,22 @@ sumContribution(){
   git log --author=$author --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
 }
 
-#by os settings
-case ${OSTYPE} in
-  darwin*)
-   fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
-      ;;
+#rbenv
+case "${OSTYPE}" in
   linux*)
-      ;;
+    export PATH=$HOME/.rbenv/bin:$PATH
+    ;;
+  *)
 esac
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 #aliases
-#
 alias f='fg'
 alias v='vim'
-alias ls="ls -Gv"
+alias ls="ls -FGbv"
 alias ll="ls -l"
 alias la="ls -a"
+alias gosh="rlwrap gosh"
 #git aliases
 if (( $+commands[hub] )) {
   eval "$(hub alias -s)"

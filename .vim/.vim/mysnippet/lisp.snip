@@ -1,0 +1,144 @@
+# general
+snippet     (
+abbr        ()
+options     head
+  (${1:TARGET})
+
+snippet     print
+abbr        (print ... )
+options     head
+  (print ${1:TARGET})
+
+# define
+snippet     defun
+abbr        (defun ... )
+options     head
+  (defun ${1:FUNC} (${2:ARGS}) ${3:CONTENT})
+
+snippet     defvar
+abbr        (defvar ... )
+options     head
+  (defvar ${1:VAR} ${2:NUM})
+
+snippet     setf
+abbr        (setf ... )
+options     head
+  (setf ${1:TARGET} ${1:TARGET})
+
+# list operator
+snippet     first
+abbr        (first ... )
+options     head
+  (first ${1:TARGET})
+
+snippet     rest
+abbr        (rest ... )
+options     head
+  (rest ${1:TARGET})
+snippet     car
+abbr        (car ... )
+options     head
+  (car ${1:TARGET})
+
+snippet     cdr
+abbr        (cdr ... )
+options     head
+  (cdr ${1:TARGET})
+
+snippet     mapchar
+abbr        (mapchar ... )
+options     head
+  (mapchar #'${1:FUNC} ${2:ARGS})
+
+snippet     apply
+abbr        (apply ... )
+options     head
+  (apply ${1:FUNC} ${2:ARGLIST})
+# control
+snippet     if
+abbr        (if ... )
+options     head
+  (if ${1:CONDITION} ${2:TARGET})
+
+snippet     when
+abbr        (when ... )
+options     head
+  (when ${1:CONDITION} ${2:TARGET})
+
+snippet     and
+abbr        (and ... )
+options     head
+  (and ${1:TARGET})
+
+snippet     or
+abbr        (or ... )
+options     head
+  (or ${1:TARGET})
+
+snippet     cond
+abbr        (cond ... )
+options     head
+  (cond (${1:COND} ${2:EXPR})
+        (${3:COND} ${4:EXPR})
+        (t ${5:EXPR}))
+
+# repetition
+snippet     dotimes
+abbr        (dotimes ... )
+options     head
+  (dotimes (${1:VAR} ${2:TIME} ${3:RESULT}) ${4:TARGET})
+
+snippet     dolist
+abbr        (dolist ... )
+options     head
+  (dolist (${1:ITER} ${2:LIST} t) ${3:TARGET})
+
+snippet     while
+abbr        (while ... )
+options     head
+  (while ${1:COND} ${2:EXPR})
+
+snippet     loop
+abbr        (loop ... )
+options     head
+  (loop
+    (if ${1:COND} (return ))
+    ${2:EXPR})
+
+snippet     do
+abbr        (do ... )
+options     head
+  (do (${1:VAR} ${2:INIT} ${3:STEP})
+    (${4:COND} ${5:RETURN})
+    ${6:EXPR})
+
+snippet     progn
+abbr        (progn ... )
+options     head
+  (progn ${1:EXPR} ${2:EXPR})
+# Bool
+snippet     evenp
+abbr        (evenp ... )
+options     head
+  (evenp ${1:TARGET})
+
+snippet     oddp
+abbr        (oddp ... )
+options     head
+  (oddp ${1:TARGET})
+
+snippet     zerop
+abbr        (zerop ... )
+options     head
+  (zerop ${1:TARGET})
+
+snippet     consp
+abbr        list is blank or not
+options     head
+  (consp ${1:TARGET})
+
+snippet     null
+abbr        nil or not
+options     head
+  (null ${1:TARGET})
+

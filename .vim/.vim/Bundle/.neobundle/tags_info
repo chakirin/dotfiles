@@ -1,0 +1,16 @@
+ctrlp.vim
+neobundle.vim
+neocomplcache
+neosnippet
+neosnippet-snippets
+slimv.vim
+syntaxhaskell.vim
+vim-coffee-script
+vim-fugitive
+vim-gdev
+vim-quickrun
+vim-rails
+vim-ref
+vim-surround
+vim_goshrepl
+vimproc.vim

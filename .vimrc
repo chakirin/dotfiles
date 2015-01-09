@@ -37,7 +37,7 @@ NeoBundleLazy 'aharisu/vim-gdev', {
       \ },
       \ 'depends' : 'Shougo/vimproc.vim'
       \ }
-NeoBundle 'thinca/vim-quickrun' 
+NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'https://github.com/kien/ctrlp.vim.git'
 NeoBundle 'https://github.com/kchmck/vim-coffee-script.git'
 NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
@@ -88,9 +88,10 @@ set hlsearch
 set number
 set cursorline
 set textwidth=0
-hi Pmenu ctermbg=8
-hi PmenuSel ctermbg=1
-hi PmenuSbar ctermbg=0
+hi Pmenu ctermbg=2
+hi PmenuSel ctermbg=4
+hi PmenuSbar ctermbg=2
+hi PmenuThumb ctermfg=3
 " Spell check
 set spell spelllang=en_us
 setlocal spell spelllang=en_us
@@ -270,5 +271,4 @@ command! -bar -bang -nargs=? -complete=file Scouter
       \        echo Scouter(empty(<q-args>) ? $MYVIMRC : expand(<q-args>), <bang>0)
 command! -bar -bang -nargs=? -complete=file GScouter
       \        echo Scouter(empty(<q-args>) ? $MYGVIMRC : expand(<q-args>), <bang>0)
-
 
