@@ -12,12 +12,30 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Plugins
 " -------------------------------------------------------------
 " see neobundle-options-autoload
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'https://github.com/kien/ctrlp.vim.git'
+NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neosnippet-snippets.git'
+NeoBundle 'https://github.com/Shougo/neosnippet.git'
+NeoBundle 'Shougo/vimproc.vim', {
+      \   'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'linux' : 'make',
+      \     'unix' : 'gmake',
+      \   }
+      \ }
+NeoBundle 'https://github.com/tpope/vim-fugitive.git'
+NeoBundle 'https://github.com/tpope/vim-surround'
+NeoBundle 'thinca/vim-ref'
 NeoBundle 'tpope/vim-rails'
 NeoBundleLazy 'vim-scripts/syntaxhaskell.vim', {
       \ 'autoload' : {
       \   'filetypes' : ['haskell']
       \ }
       \ }
+NeoBundle 'https://github.com/kchmck/vim-coffee-script.git'
 NeoBundleLazy 'slimv.vim', {
       \ 'autoload' : {
       \   'filetypes' : ['lisp']
@@ -37,24 +55,6 @@ NeoBundleLazy 'aharisu/vim-gdev', {
       \ },
       \ 'depends' : 'Shougo/vimproc.vim'
       \ }
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'https://github.com/kien/ctrlp.vim.git'
-NeoBundle 'https://github.com/kchmck/vim-coffee-script.git'
-NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neosnippet-snippets.git'
-NeoBundle 'https://github.com/Shougo/neosnippet.git'
-NeoBundle 'Shougo/vimproc.vim', {
-      \   'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'linux' : 'make',
-      \     'unix' : 'gmake',
-      \   }
-      \ }
-NeoBundle 'https://github.com/tpope/vim-fugitive.git'
-NeoBundle 'https://github.com/tpope/vim-surround'
-NeoBundle 'thinca/vim-ref'
 " General
 " -------------------------------------------------------------
 call neobundle#end()
@@ -120,13 +120,6 @@ endif
 noremap <Space>. :<C-u>edit $MYVIMRC<Enter>
 noremap <Space>s. :<C-u>source $MYVIMRC<Enter>
 
-" Show AllMaps
-" -------------------------------------------------------------
-command!
-      \   -nargs=* -complete=mapping
-      \   AllMaps
-      \   map <args> | map! <args> | lmap <args>
-
 " Fugitive
 " -------------------------------------------------------------
 com! Gb Gblame
@@ -138,6 +131,7 @@ augroup Autocmds
   au BufNewFile *.py call append(0, "#!/usr/bin/env python") | normal! G
   au BufNewFile *.rb call append(0, "#!/usr/bin/env ruby") | normal! G
   au BufNewFile *.pl call append(0, "#!/usr/bin/env perl")   | normal! G
+  au BufNewFile *.sed call append(0, "#!/bin/sed -f") | normal! G
   au BufWritePost * silent! %s/\s\+$//e
 augroup END
 
@@ -215,6 +209,30 @@ smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 let s:my_snippet = '~/.vim/mysnippet/'
 let g:neosnippet#snippets_directory = s:my_snippet
 
+" for rails
+augroup railsdetect
+  autocmd! BufEnter * if exists("b:rails_root") | call s:RailsSnippet() | endif
+augroup END
+
+function! s:RailsSnippet()
+  let s:current_dir = expand("%:p:h")
+  if (s:current_dir !~ "app/")
+    return
+  elseif (s:current_dir =~ "app/models")
+    NeoSnippetSource ~/.vim/mysnippet/model.rails.snip
+  elseif (s:current_dir =~ "app/controllers")
+    NeoSnippetSource ~/.vim/mysnippet/controller.rails.snip
+  elseif (s:current_dir =~ "app/views") || (expand("%:e") == "haml")
+    NeoSnippetSource ~/.vim/mysnippet/view.rails.haml.snip
+  elseif (s:current_dir =~ "app/views") || (expand("%:e") == "erb")
+    NeoSnippetSource ~/.vim/mysnippet/view.rails.erb.snip
+  elseif (s:current_dir =~ "app/helpers")
+    NeoSnippetSource ~/.vim/mysnippet/helper.rails.snip
+  elseif (s:current_dir =~ "app/assets")
+    NeoSnippetSource ~/.vim/mysnippet/asset.rails.snip
+  endif
+endfunction
+
 " NeoSnippet
 " -------------------------------------------------------------
 let g:quickrun_config = {}
@@ -232,6 +250,9 @@ let g:quickrun_config['tex'] = {
             \   'cmdopt': '-pdfdvi',
             \   'exec': ['%c %o %s']
             \ }
+
+"" Latex setting
+" -------------------------------------------------------------
 
 "" Gosh
 " -------------------------------------------------------------
