@@ -18,15 +18,14 @@ case ${OSTYPE} in
     trash(){
       mv $1 $HOME/.local/share/Trash/files/;
     }
+    # japanese setting
+    setxkbmap -model jp106 -layout jp
+    ibus-daemon -drx
+    export GTK_IM_MODULE=ibus
+    export XMODIFIERS=@im=ibus
+    export QT_IM_MODULE=ibus
       ;;
 esac
-
-sumContribution(){
-  author=$2
-  if [ -z "$author" ]; then author='ii.hsif.drows@gmail.com'; fi
-  echo "Author: $author"
-  git log --author=$author --shortstat --since=$1 |grep 'files\? changed' | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print "files changed", files, "lines inserted:", inserted, "lines deleted:", deleted}'
-}
 
 #rbenv
 case "${OSTYPE}" in
@@ -36,6 +35,13 @@ case "${OSTYPE}" in
   *)
 esac
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+source $HOME/.rbenv/completions/rbenv.zsh
+
+# Virtualenvwrapper
+if [ -f /usr/bin/virtualenvwrapper.sh ]; then
+  export WORKON_HOME=$HOME/.virtualenvs
+  source /usr/bin/virtualenvwrapper.sh
+fi
 
 #aliases
 alias f='fg'
@@ -48,24 +54,6 @@ alias gosh="rlwrap gosh"
 if (( $+commands[hub] )) {
   eval "$(hub alias -s)"
 }
-alias g='git'
-alias gf='git flow'
-alias gs='git status -s -b'
-alias gb='git branch --color'
-alias gco='git checkout'
-alias ga='git add'
-alias gl='git log'
-alias gc='git commit -v'
-alias gst='git stash'
-alias gpull='git pull'
-alias gpush='git push'
-alias gdif='git diff'
-alias gg='git grep'
-alias grb='git rebase'
-alias gbr='git branch'
-alias grm='git redmine'
-alias today="sumContribution 1.day"
-alias week="sumContribution 1.week"
 
 # comp
 #
