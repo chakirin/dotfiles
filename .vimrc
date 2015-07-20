@@ -14,7 +14,15 @@ call neobundle#begin(expand('~/.vim/Bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " Plugins
 " -------------------------------------------------------------
-" see neobundle-options-autoload
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'easymotion/vim-easymotion'
+NeoBundle 'kien/ctrlp.vim.git'
+NeoBundle 'tpope/vim-fugitive.git'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-rails'
+NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neosnippet-snippets.git'
+NeoBundle 'Shougo/neosnippet.git'
 NeoBundle 'Shougo/vimproc.vim', {
       \   'build' : {
       \     'windows' : 'tools\\update-dll-mingw',
@@ -24,15 +32,6 @@ NeoBundle 'Shougo/vimproc.vim', {
       \     'unix' : 'gmake',
       \   }
       \ }
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'kien/ctrlp.vim.git'
-NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neosnippet-snippets.git'
-NeoBundle 'Shougo/neosnippet.git'
-NeoBundle 'Shougo/vimshell'
-NeoBundle 'tpope/vim-fugitive.git'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-rails'
 " END
 " -------------------------------------------------------------
 call neobundle#end()
@@ -47,6 +46,7 @@ NeoBundleCheck
 set enc=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,cp932,ucs-bom,default,latin1
 set shell=zsh
+set synmaxcol=300
 set lazyredraw
 set ttyfast
 
@@ -71,19 +71,25 @@ set showcmd
 set laststatus=2
 set shortmess+=I
 set vb t_vb=
+set novisualbell
+set incsearch
 set hlsearch
 set number
+set matchpairs& matchpairs+=<:>
+set showmatch
+set matchtime=3
+set wrap
 set cursorline
 set textwidth=0
 hi Pmenu ctermbg=2
 hi PmenuSel ctermbg=4
 hi PmenuSbar ctermbg=2
 hi PmenuThumb ctermfg=3
-" Spell check
-set spell spelllang=en_us
-setlocal spell spelllang=en_us
-hi clear SpellBad
-hi SpellBad cterm=underline
+hi TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+hi TabLine ctermfg=Blue ctermbg=Yellow
+hi TabLineSel ctermfg=Red ctermbg=Yellow
+hi Title ctermfg=LightBlue ctermbg=Magenta
+
 
 " Editing
 " -------------------------------------------------------------
@@ -204,19 +210,6 @@ if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
 
-" Vim-Quickrun
+" NerdTree
 " -------------------------------------------------------------
-let g:quickrun_config = {}
-let g:quickrun_config = {
-      \   "_" : {
-      \       "runner" : "vimproc",
-      \       "runner/vimproc/updatetime" : 60
-      \   },
-      \}
-let g:quickrun_config['tex'] = {
-            \   'command' : 'latexmk',
-            \   'outputter' : 'error',
-            \   'outputter/error/error' : 'quickfix',
-            \   'cmdopt': '-pdfdvi',
-            \   'exec': ['%c %o %s']
-            \ }
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
