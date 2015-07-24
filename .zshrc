@@ -1,59 +1,35 @@
+########################################
+#               General                #
+########################################
+# environments
+#
 export LC_ALL="en_US.UTF-8"
 export LANG="en_JP.UTF-8"
-
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
-#unix settings
-stty icrnl
-
-#by os settings
-case ${OSTYPE} in
-  darwin*)
-   fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
-   trash(){
-    mv $1 $HOME/.Trash/;
-   }
-      ;;
-  linux*)
-    trash(){
-      mv $1 $HOME/.local/share/Trash/files/;
-    }
-    # japanese setting
-    setxkbmap -model jp106 -layout jp
-    ibus-daemon -drx
-    export GTK_IM_MODULE=ibus
-    export XMODIFIERS=@im=ibus
-    export QT_IM_MODULE=ibus
-      ;;
-esac
-
-#rbenv
-case "${OSTYPE}" in
-  linux*)
-    export PATH=$HOME/.rbenv/bin:$PATH
-    ;;
-  *)
-esac
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-source $HOME/.rbenv/completions/rbenv.zsh
-
-# Virtualenvwrapper
-if [ -f /usr/bin/virtualenvwrapper.sh ]; then
-  export WORKON_HOME=$HOME/.virtualenvs
-  source /usr/bin/virtualenvwrapper.sh
-fi
-
-#aliases
-alias f='fg'
+# aliases
+#
 alias v='vim'
 alias ls="ls -FGbv"
 alias ll="ls -l"
 alias la="ls -a"
-alias gosh="rlwrap gosh"
-#git aliases
-if (( $+commands[hub] )) {
-  eval "$(hub alias -s)"
-}
+
+# auto change directory
+#
+setopt auto_cd
+
+# url escape
+#
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
+# use #, ~, ^ as regexp in filename
+#
+setopt extended_glob
+
+# correct spell miss
+#
+setopt correct
 
 # comp
 #
@@ -70,31 +46,54 @@ bindkey -e
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
 
-# auto change directory
-#
-setopt auto_cd
+########################################
+#              OS Settings             #
+########################################
+case ${OSTYPE} in
+  darwin*)
+    fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+    trash(){
+    mv $1 $HOME/.Trash/;
+   }
+      ;;
+  linux*)
+    trash(){
+      mv $1 $HOME/.local/share/Trash/files/;
+    }
+    # keyboard setting
+    stty icrnl
+    setxkbmap -model jp106 -layout jp
+    ibus-daemon -drx
+    export GTK_IM_MODULE=ibus
+    export XMODIFIERS=@im=ibus
+    export QT_IM_MODULE=ibus
+      ;;
+esac
 
-# for url escape
+########################################
+#           Software Settings          #
+########################################
+# rbenv
 #
-autoload -Uz url-quote-magic
-zle -N self-insert url-quote-magic
+case ${OSTYPE} in
+  linux*)
+    export PATH=$HOME/.rbenv/bin:$PATH
+    ;;
+  *)
+esac
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+source $HOME/.rbenv/completions/rbenv.zsh
 
-# use #, ~, ^ as regexp in filename
+# Virtualenvwrapper
 #
-setopt extended_glob
+if [ -f /usr/bin/virtualenvwrapper.sh ]; then
+  export WORKON_HOME=$HOME/.virtualenvs
+  source /usr/bin/virtualenvwrapper.sh
+fi
 
-# no more escape for git carrets like HEAD^
-#
-if [[ -f ~/repos/zsh-git-escape-magic ]] {
-  fpath=(~/repos/zsh-git-escape-magic ${fpath})
-  autoload -Uz git-escape-magic
-  git-escape-magic
-}
-
-# correct spell miss
-#
-setopt correct
-
+########################################
+#               Display                #
+########################################
 # About ls command
 #
 export LSCOLORS=gxfxcxdxbxhggdabagacad

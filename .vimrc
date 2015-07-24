@@ -90,7 +90,6 @@ hi TabLine ctermfg=Blue ctermbg=Yellow
 hi TabLineSel ctermfg=Red ctermbg=Yellow
 hi Title ctermfg=LightBlue ctermbg=Magenta
 
-
 " Editing
 " -------------------------------------------------------------
 set autoindent smartindent
