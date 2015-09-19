@@ -1,6 +1,15 @@
-#!/usr/bin/perl
-$latex = 'platex -synctex=1 %O %S';
-$bibtex = 'pbibtex %O %B';
-$dvipdf = 'dvipdfmx %O %S';
-$pdf_mode = 3; # use dvipdf
-$pdf_update_command = 'open -a Preview %S'; 
+$latex = 'uplatex -synctex=1';
+$latex_silent = 'uplatex -synctex=1 -interaction=batchmode';
+$bibtex = 'upbibtex';
+$biber = 'biber --bblencoding=utf8 -u -U --output_safechars';
+$dvipdf ='dvipdfmx %O -o %D %S';
+$dvips = 'pdvips';
+$makeindex = 'mendex %O -o %D %S';
+$max_repeat = 5;
+$pdf_mode =3; # 0:-pdf-,1: -pdf,2: -pdfps,3: -pdfdvi
+$OS_TYPE = $^O;
+if ($OS_TYPE eq 'linux') {
+  $pdf_viewer = '';
+} elsif ($OS_TYPE eq 'MSWin32') {
+  $pdf_viewer = 'acrobat ';
+}
