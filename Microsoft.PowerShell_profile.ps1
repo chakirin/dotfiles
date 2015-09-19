@@ -35,6 +35,7 @@ Set-Alias scp 'C:\Program Files\Git\usr\bin\scp.exe'
 Set-Alias python 'C:\Program Files (x86)\Python-3.4.3\python.exe'
 Set-Alias youtube-dl 'C:\Program Files (x86)\youtube-dl\youtube-dl.exe'
 Set-Alias notepad++ 'C:\Program Files (x86)\Notepad++\notepad++.exe'
+Set-Alias acrobat 'C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe'
 
 ########################################
 #               Display                #
