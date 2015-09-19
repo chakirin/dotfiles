@@ -9,7 +9,7 @@ $max_repeat = 5;
 $pdf_mode =3; # 0:-pdf-,1: -pdf,2: -pdfps,3: -pdfdvi
 $OS_TYPE = $^O;
 if ($OS_TYPE eq 'linux') {
-  $pdf_viewer = '';
+  $pdf_previewer = 'evince';
 } elsif ($OS_TYPE eq 'MSWin32') {
-  $pdf_viewer = 'acrobat ';
+  $pdf_previewer = 'acrobat';
 }
