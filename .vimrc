@@ -20,6 +20,8 @@ NeoBundle 'kien/ctrlp.vim.git'
 NeoBundle 'tpope/vim-fugitive.git'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-rails'
+NeoBundle 'othree/yajs.vim'
+NeoBundle 'fatih/vim-go'
 NeoBundle has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neosnippet-snippets.git'
 NeoBundle 'Shougo/neosnippet.git'
@@ -113,15 +115,23 @@ endif
 noremap <Space>. :<C-u>edit $MYVIMRC<Enter>
 noremap <Space>s. :<C-u>source $MYVIMRC<Enter>
 
-" Auto Exexuted Commands
+" Language Type Settings
 " -------------------------------------------------------------
-augroup Autocmds
+augroup AutoShebang
   au BufNewFile *.sh call append(0, "#!/bin/sh")             | normal! G
   au BufNewFile *.py call append(0, "#!/usr/bin/env python") | normal! G
   au BufNewFile *.rb call append(0, "#!/usr/bin/env ruby") | normal! G
   au BufNewFile *.pl call append(0, "#!/usr/bin/env perl")   | normal! G
   au BufNewFile *.sed call append(0, "#!/bin/sed -f") | normal! G
   au BufWritePost * silent! %s/\s\+$//e
+augroup END
+
+augroup Indent
+  au FileType go setlocal sw=4 ts=4 sts=4 noet
+augroup END
+
+augroup AutoExecutedCommands
+  au BufWritePost *.go GoFmt
 augroup END
 
 " Other
