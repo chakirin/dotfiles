@@ -1,0 +1,51 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Maintainer: Your Name <youremail@domain.com>
+pkgname=dwm
+pkgver=6.0
+pkgrel=1
+epoch=
+pkgdesc="A dynamic window manager for X"
+arch=('x86_64')
+url="http://dwm.suckless.org/"
+license=('MIT')
+groups=()
+depends=('acpi' 'awk' 'dmenu')
+makedepends=('make' 'gcc')
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("http://dl.suckless.org/$pkgname/$pkgname-$pkgver.tar.gz"
+        "config.h"
+        "http://dwm.suckless.org/patches/$pkgname-$pkgver-statusallmons.diff"
+        )
+noextract=()
+md5sums=('8bb00d4142259beb11e13473b81c0857'
+         'be08d7021bd3ba3f86b56e4131182e6c'
+         'b56a640d0b701b9d2a6416ed3d6fce6a')
+validpgpkeys=()
+
+prepare() {
+	cd "$srcdir/$pkgname-$pkgver"
+  cp "$srcdir/config.h" "$srcdir/$pkgname-$pkgver/config.h"
+	patch -p1 -i "$srcdir/$pkgname-$pkgver-statusallmons.diff"
+}
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+}
