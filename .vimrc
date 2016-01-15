@@ -67,7 +67,9 @@ endif
 syntax on
 set background=dark
 set ruler
-set statusline=%<%f\ %{fugitive#statusline()}%h%m%r%= " at left
+if neobundle#is_installed('vim-fugitive')
+  set statusline=%<%f\ %{fugitive#statusline()}%h%m%r%= " at left
+endif
 set statusline+=%{'['.(&fenc!=''?&fenc:&enc).']'}\ %l-%v\ %p%%\ [%02B] " at right
 set showcmd
 set laststatus=2
@@ -202,7 +204,11 @@ elseif neobundle#is_installed('neocomplcache')
 endif
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "\<CR>"
+if neobundle#is_installed('neocomplcache')
+  inoremap <expr><CR> pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+elseif 
+  inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endif
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
