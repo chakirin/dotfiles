@@ -74,6 +74,9 @@ esac
 # rbenv
 #
 case ${OSTYPE} in
+  darwin*)
+    export PATH=$HOME/.rbenv/bin:$PATH
+    ;;
   linux*)
     export PATH=$HOME/.rbenv/bin:$PATH
     ;;
@@ -84,12 +87,7 @@ source $HOME/.rbenv/completions/rbenv.zsh
 
 # pyenv
 #
-case ${OSTYPE} in
-  linux*)
-    export PATH=$HOME/.pyenv/shims:$PATH
-    ;;
-  *)
-esac
+export PATH=$HOME/.pyenv/shims:$PATH
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
@@ -97,6 +95,11 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # mecab
 #
 export MECAB_PATH=/usr/lib/libmecab.so.2
+
+# golang
+# 
+export GOPATH=$HOME/.go
+export PATH=$GOPATH/bin:$PATH
 
 ########################################
 #               Display                #
